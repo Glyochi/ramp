@@ -7,7 +7,8 @@ import {
 import { PaginatedRequestParams, RequestByEmployeeParams, SetTransactionApprovalParams } from "./types"
 
 const timeout = getTimeout()
-const mockTimeout = 1 * timeout
+// const mockTimeout = 1 * timeout
+const mockTimeout = 0 * timeout
 
 export function fakeFetch<TData, TParams extends object = object>(
   endpoint: RegisteredEndpoints,

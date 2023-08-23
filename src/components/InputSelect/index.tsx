@@ -2,6 +2,7 @@ import Downshift from "downshift"
 import { useCallback, useState } from "react"
 import classNames from "classnames"
 import { DropdownPosition, GetDropdownPositionFn, InputSelectOnChange, InputSelectProps } from "./types"
+import { relative } from "path"
 
 export function InputSelect<TItem>({
   label,
@@ -65,15 +66,16 @@ export function InputSelect<TItem>({
             >
               {inputValue}
             </div>
-
-            <div
-              className={classNames("RampInputSelect--dropdown-container", {
-                "RampInputSelect--dropdown-container-opened": isOpen,
-              })}
-              {...getMenuProps()}
-              style={{ top: dropdownPosition.top, left: dropdownPosition.left }}
-            >
-              {renderItems()}
+            <div style={{ position: "relative"}}>
+              <div
+                className={classNames("RampInputSelect--dropdown-container", {
+                  "RampInputSelect--dropdown-container-opened": isOpen,
+                })}
+                {...getMenuProps()}
+                // style={{ top: dropdownPosition.top, left: dropdownPosition.left }}
+              >
+                {renderItems()}
+              </div>
             </div>
           </div>
         )
