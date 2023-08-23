@@ -28,13 +28,13 @@ export function InputSelect<TItem>({
   const onChange = useCallback<InputSelectOnChange<TItem>>(
     (selectedItem) => {
       // Prevent race condition making multiple requests to the server, which causes transactions to not reflect filter's selected value
-      if (isLoadingTransactions){
-        // Reset the filter to the last selected value 
-        console.log("--Additional Bug Fix--")
-        console.log("Have to wait for the last request to finish before making another one through the filter")
-        downshiftRef.current?.selectItem(selectedValue)
-        return
-      }
+      // if (isLoadingTransactions){
+      //   // Reset the filter to the last selected value 
+      //   console.log("--Additional Bug Fix--")
+      //   console.log("Have to wait for the last request to finish before making another one through the filter")
+      //   downshiftRef.current?.selectItem(selectedValue)
+      //   return
+      // }
       if (selectedItem === null) {
         return
       }

@@ -15,6 +15,13 @@ export function App() {
   const [isLoadingEmployees, setIsLoadingEmployees] = useState(false)
   const [isLoadingTransactions, setIsLoadingTransactions] = useState(false)
 
+  // const [transactions, setTransactions] = useState<Transaction[] | null>(null)
+  // useEffect(() => {
+  //   console.dir("--------------------")
+  //   console.dir(paginatedTransactions?.data)
+  //   console.dir(transactionsByEmployee)
+  //   setTransactions(paginatedTransactions?.data ?? transactionsByEmployee ?? null)
+  // }, [paginatedTransactions, transactionsByEmployee])
   const transactions = useMemo(
     () => {
       return paginatedTransactions?.data ?? transactionsByEmployee ?? null
@@ -31,7 +38,7 @@ export function App() {
     setIsLoadingEmployees(true)
     setIsLoadingTransactions(true)
     transactionsByEmployeeUtils.invalidateData()
-
+    
     let employeePromise = employeeUtils.fetchAll()
     let transactionPromise = paginatedTransactionsUtils.fetchAll()
 
