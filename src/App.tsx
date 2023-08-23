@@ -6,7 +6,7 @@ import { useEmployees } from "./hooks/useEmployees"
 import { usePaginatedTransactions } from "./hooks/usePaginatedTransactions"
 import { useTransactionsByEmployee } from "./hooks/useTransactionsByEmployee"
 import { EMPTY_EMPLOYEE } from "./utils/constants"
-import { Employee } from "./utils/types"
+import { Employee, Transaction } from "./utils/types"
 
 export function App() {
   const { data: employees, ...employeeUtils } = useEmployees()
@@ -16,15 +16,22 @@ export function App() {
   const [isLoadingTransactions, setIsLoadingTransactions] = useState(false)
 
   const transactions = useMemo(
-    () => paginatedTransactions?.data ?? transactionsByEmployee ?? null,
+    () => {
+      return paginatedTransactions?.data ?? transactionsByEmployee ?? null
+    },
     [paginatedTransactions, transactionsByEmployee]
   )
+
+  const clearTransactionsCachedResults = () => {
+    paginatedTransactionsUtils.clearCachedResults()
+    transactionsByEmployeeUtils.clearCachedResults()
+  }
 
   const loadAllTransactions = useCallback(async () => {
     setIsLoadingEmployees(true)
     setIsLoadingTransactions(true)
     transactionsByEmployeeUtils.invalidateData()
-    
+
     let employeePromise = employeeUtils.fetchAll()
     let transactionPromise = paginatedTransactionsUtils.fetchAll()
 
@@ -37,8 +44,10 @@ export function App() {
 
   const loadTransactionsByEmployee = useCallback(
     async (employeeId: string) => {
+      setIsLoadingTransactions(true)
       paginatedTransactionsUtils.invalidateData()
       await transactionsByEmployeeUtils.fetchById(employeeId)
+      setIsLoadingTransactions(false)
     },
     [paginatedTransactionsUtils, transactionsByEmployeeUtils]
   )
@@ -57,7 +66,8 @@ export function App() {
         <hr className="RampBreak--l" />
 
         <InputSelect<Employee>
-          isLoading={isLoadingEmployees}
+          isLoadingEmployees={isLoadingEmployees}
+          isLoadingTransactions={isLoadingTransactions}
           defaultValue={EMPTY_EMPLOYEE}
           items={employees === null ? [] : [EMPTY_EMPLOYEE, ...employees]}
           label="Filter by employee"
@@ -70,8 +80,8 @@ export function App() {
             if (newValue === null || newValue.id === '') {
               await loadAllTransactions()
               return
-            }            
-            
+            }
+
             await loadTransactionsByEmployee(newValue.id)
           }}
         />
@@ -79,7 +89,7 @@ export function App() {
         <div className="RampBreak--l" />
 
         <div className="RampGrid">
-          <Transactions transactions={transactions} />
+          <Transactions transactions={transactions} clearTransactionsCachedResults={clearTransactionsCachedResults} />
 
           {transactions !== null && paginatedTransactions !== null && paginatedTransactions.nextPage !== null && (
             <button

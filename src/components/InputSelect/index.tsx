@@ -1,5 +1,5 @@
 import Downshift from "downshift"
-import { useCallback, useState } from "react"
+import { useCallback, useReducer, useRef, useState } from "react"
 import classNames from "classnames"
 import { DropdownPosition, GetDropdownPositionFn, InputSelectOnChange, InputSelectProps } from "./types"
 import { relative } from "path"
@@ -10,7 +10,8 @@ export function InputSelect<TItem>({
   onChange: consumerOnChange,
   items,
   parseItem,
-  isLoading,
+  isLoadingEmployees,
+  isLoadingTransactions,
   loadingLabel,
 }: InputSelectProps<TItem>) {
   const [selectedValue, setSelectedValue] = useState<TItem | null>(defaultValue ?? null)
@@ -19,9 +20,21 @@ export function InputSelect<TItem>({
     left: 0,
   })
 
+  const downshiftRef = useRef<any>(null)
+
+
+
 
   const onChange = useCallback<InputSelectOnChange<TItem>>(
     (selectedItem) => {
+      // Prevent race condition making multiple requests to the server, which causes transactions to not reflect filter's selected value
+      if (isLoadingTransactions){
+        // Reset the filter to the last selected value 
+        console.log("--Additional Bug Fix--")
+        console.log("Have to wait for the last request to finish before making another one through the filter")
+        downshiftRef.current?.selectItem(selectedValue)
+        return
+      }
       if (selectedItem === null) {
         return
       }
@@ -34,6 +47,7 @@ export function InputSelect<TItem>({
 
   return (
     <Downshift<TItem>
+      ref={downshiftRef}
       id="RampSelect"
       onChange={onChange}
       selectedItem={selectedValue}
@@ -86,7 +100,7 @@ export function InputSelect<TItem>({
             return null
           }
 
-          if (isLoading) {
+          if (isLoadingEmployees) {
             return <div className="RampInputSelect--dropdown-item">{loadingLabel}...</div>
           }
 

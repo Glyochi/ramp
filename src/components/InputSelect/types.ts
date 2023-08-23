@@ -6,7 +6,8 @@ export type InputSelectProps<TItem> = {
   onChange: (value: TItem | null) => void
   items: TItem[]
   parseItem: (item: TItem) => InputSelectItem
-  isLoading?: boolean
+  isLoadingEmployees?: boolean
+  isLoadingTransactions?: boolean
   loadingLabel: string
 }
 
