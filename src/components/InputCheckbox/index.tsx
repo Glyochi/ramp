@@ -1,5 +1,5 @@
 import classNames from "classnames"
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import { InputCheckboxComponent } from "./types"
 
 export const InputCheckbox: InputCheckboxComponent = ({ id, checked = false, disabled, onChange }) => {
@@ -8,10 +8,13 @@ export const InputCheckbox: InputCheckboxComponent = ({ id, checked = false, dis
   return (
     <div className="RampInputCheckbox--container" data-testid={inputId}>
       <label
-        className={classNames("RampInputCheckbox--label", {
-          "RampInputCheckbox--label-checked": checked,
+        className={classNames("RampInputCheckbox--label", (checked ? "RampInputCheckbox--label-checked" : ""), {
           "RampInputCheckbox--label-disabled": disabled,
         })}
+        onClick={() => {
+          let input = document.getElementById(inputId) as HTMLInputElement;
+          input.click();
+        }}
       />
       <input
         id={inputId}
@@ -20,6 +23,7 @@ export const InputCheckbox: InputCheckboxComponent = ({ id, checked = false, dis
         checked={checked}
         disabled={disabled}
         onChange={() => onChange(!checked)}
+
       />
     </div>
   )
