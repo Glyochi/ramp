@@ -1,5 +1,5 @@
 import Downshift from "downshift"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import classNames from "classnames"
 import { DropdownPosition, GetDropdownPositionFn, InputSelectOnChange, InputSelectProps } from "./types"
 import { relative } from "path"
@@ -19,10 +19,6 @@ export function InputSelect<TItem>({
     left: 0,
   })
 
-  useEffect(() => {
-    console.dir("-------------------")
-    console.dir(items)
-  }, [items])
 
   const onChange = useCallback<InputSelectOnChange<TItem>>(
     (selectedItem) => {
